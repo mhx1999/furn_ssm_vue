@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+
+
+
+    <!--扫描组件-->
+    <context:component-scan base-package="com.mhx.furn">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+
+    <!-- 引入jdbc.properties -->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+    <!-- 配置Druid数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+
+
+
+    <!-- 配置用于创建SqlSessionFactory的工厂bean -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+
+        <!-- 设置MyBatis核心配置文件的路径（可以不设置） -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 设置数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 设置类型别名所对应的包 -->
+<!--        <property name="typeAliasesPackage" value="com.mhx.furn.Bean"></property>-->
+        <!--设置映射文件的路径
+        若映射文件所在路径和mapper接口所在路径一致，则不需要设置-->
+        <property name="mapperLocations" value="classpath:mappers/*.xml"/>
+
+    </bean>
+
+    <!--
+    配置mapper接口的扫描配置
+    可以将指定包下所有的mapper接口创建动态代理并将这些动态代理作为IOC容器的bean管理
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mhx.furn.Dao"></property>
+    </bean>
+
+
+<!--配置事务管理器-->
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+
+<!--配置开启基于注解的事务 使用XML配置+切入表达式，并指定切入点-->
+
+<!--<aop:config>-->
+<!--&lt;!&ndash;    切入点表达式&ndash;&gt;-->
+<!--    <aop:pointcut id="txPoint" expression="execution(* com.mhx.furn.Service..*(..))"/>-->
+<!--&lt;!&ndash;    配置事务增强：使用txAdvice 指定规则对 txPoint进行切入 &ndash;&gt;-->
+<!--    <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>-->
+
+<!--</aop:config>-->
+<!--&lt;!&ndash;配置事务增强，页就是指定事务如何切入&ndash;&gt;-->
+<!--<tx:advice id="txAdvice">-->
+<!--    <tx:attributes>-->
+<!--&lt;!&ndash;        *代表所有方法都是事务方法&ndash;&gt;-->
+<!--        <tx:method name="*"/>-->
+<!--        &lt;!&ndash;    以get开始的所有方法，我们认为是只读，进行调优&ndash;&gt;-->
+<!--        <tx:method name="get*" read-only="true"/>-->
+<!--    </tx:attributes>-->
+<!--</tx:advice>-->
+
+
+
+</beans>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+
+<!--        配置Mybatis自带的日志输出,查看原生的sql-->
+        <settings>
+            <setting name="logImpl" value="STDOUT_LOGGING"/>
+        </settings>
+
+<!--    -->
+<!--    <settings>-->
+<!--        &lt;!&ndash;将下划线映射为驼峰&ndash;&gt;-->
+<!--        <setting name="mapUnderscoreToCamelCase" value="true"/>-->
+<!--    </settings>-->
+<!--    <plugins>-->
+<!--        &lt;!&ndash;配置分页插件&ndash;&gt;-->
+<!--        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>-->
+<!--    </plugins>-->
+
+
+<!--&lt;!&ndash;    若一个包下有很多的类，可以直接引入包，这样该包下面的所有类名，可以直接使用&ndash;&gt;-->
+<typeAliases>
+    <package name="com.mhx.furn.Bean"/>
+</typeAliases>
+
+
+<!--    &lt;!&ndash; 设置类型别名所对应的包 &ndash;&gt;-->
+<!--    <property name="typeAliasesPackage" value="com.mhx.furn.Bean"></property>-->
+
+
+
+
+</configuration>
